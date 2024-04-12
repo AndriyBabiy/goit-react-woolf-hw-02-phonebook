@@ -1,4 +1,4 @@
-import { Form } from 'components/Form/Form';
+import Form from 'components/Form/Form';
 import { Container } from './App.styled';
 import { Component } from 'react';
 import { ComponentHeading } from 'components/ComponentHeading/ComponentHeading';
@@ -13,8 +13,6 @@ const INITIAL_STATE = {
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ],
   filter: '',
-  name: '',
-  number: '',
 };
 
 class App extends Component {
@@ -29,23 +27,13 @@ class App extends Component {
   createNewContact = newContact => {
     const existingNames = this.state.contacts.map(({ name }) => name);
 
-    if (existingNames.includes(newContact.name)) {
+    if (existingNames.find(name => name === newContact.name)) {
       alert(`${newContact.name} is already in contacts`);
     } else {
       this.setState(({ contacts }) => ({
         contacts: [{ ...newContact, id: uuidv4() }, ...contacts],
       }));
     }
-  };
-
-  handleSubmit = evt => {
-    evt.preventDefault();
-    const { name, number } = this.state;
-    this.createNewContact({ name, number });
-    this.setState({
-      name: '',
-      number: '',
-    });
   };
 
   handleDelete = id => {
@@ -66,12 +54,7 @@ class App extends Component {
     return (
       <Container>
         <ComponentHeading size="xlarge" text={'Phonebook'} />
-        <Form
-          formSubmit={this.handleSubmit}
-          formChange={this.handleChange}
-          name={this.state.name}
-          number={this.state.number}
-        />
+        <Form submit={this.createNewContact} />
         <ComponentHeading size="xlarge" text={'Contacts'} />
         <Contacts
           contacts={this.state.contacts}
